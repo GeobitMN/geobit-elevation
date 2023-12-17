@@ -4,6 +4,7 @@ from .point_handler import PointHandler
 class PolylineHandler:
     def __init__(self, line):
         self._line = line
+        self._vertices = [PointHandler(vertex=vertex) for vertex in self._line.vertices]
 
     @property
     def line(self):
@@ -11,5 +12,4 @@ class PolylineHandler:
 
     @property
     def vertices(self):
-        for vertex in self._line.vertices:
-            yield PointHandler(vertex=vertex)
+        return self._vertices
