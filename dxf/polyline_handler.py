@@ -13,3 +13,6 @@ class PolylineHandler:
     @property
     def vertices(self):
         return self._vertices
+
+    def __getitem__(self, index):
+        return self._vertices[index]
