@@ -14,12 +14,47 @@ class DXFHandler:
 
         self._space = self._doc.modelspace()
 
-    def create_new_layer(self, layer_name=None, color=7, line_type="DASHED"):
+    def _save(self):
+        self._doc.save()
+
+    def create_new_layer(self, *, layer_name=None, color=7, line_type="DASHED"):
         if not layer_name:
             raise ValueError("No layer_name specified!")
 
-        new_layer = self._doc.layers.add(name=layer_name, color=color, linetype=line_type)
-        return new_layer
+        self._doc.layers.add(name=layer_name, color=color, linetype=line_type)
+        return layer_name
+
+    def store_polyline(self, *, layer_name=None, points=None):
+        if not layer_name:
+            raise ValueError("No layer_name specified!")
+
+        if not points:
+            raise ValueError("No points for polyline provided!")
+
+        attribs = {"layer": layer_name}
+
+        self._space.add_polyline3d(points=points, dxfattribs=attribs)
+        self._save()
+
+    def store_points(self, *, layer_name=None, points=None):
+        if not layer_name:
+            raise ValueError("No layer_name specified!")
+
+        if not points:
+            raise ValueError("No points provided!")
+
+        attribs = {
+            "layer": layer_name,
+            "color": 62,
+            "angle": 50,
+            "plotstyle_enum": 380,
+            "plotstyle_handle": 390,
+        }
+
+        for point in points:
+            self._space.add_point(location=point, dxfattribs=attribs)
+
+        self._save()
 
     @property
     def lines(self):
@@ -29,3 +64,12 @@ class DXFHandler:
             raise ValueError("No POLYLINE found in space!")
 
         return [PolylineHandler(line=line) for line in lines]
+
+    @property
+    def points(self):
+        points = self._space.query("POINT")
+
+        if not points:
+            raise ValueError("No POINT found in space!")
+
+        return points.entities
