@@ -33,7 +33,11 @@ class Manager:
                 delta = height_difference(point=point_mid, height=height)
 
                 # Store point
-                height_point =  (point_mid.x, delta, 0)
+                # Point is created as follows:
+                # We use the same X,
+                # Add the delta of height to the Y - to obtain a difference in elevation on plot
+                # And use Delta as Z for safekeeping.
+                height_point = (point_mid.x, point_mid.y + delta, delta)
                 height_points.append(height_point)
 
                 first_index += 1
