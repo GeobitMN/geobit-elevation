@@ -17,7 +17,7 @@ class DXFHandler:
     def _save(self):
         self._doc.save()
 
-    def create_new_layer(self, *, layer_name=None, color=7, line_type="DASHED"):
+    def create_new_layer(self, *, layer_name=None, color=7, line_type="CONTINUOUS"):
         if not layer_name:
             raise ValueError("No layer_name specified!")
 
@@ -53,6 +53,7 @@ class DXFHandler:
 
         for point in points:
             self._space.add_point(location=point, dxfattribs=attribs)
+            self._space.add_text(text=f"{(point[2]*1000):.1f}", height=0.005).set_placement(point)
 
         self._save()
 

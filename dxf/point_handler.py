@@ -17,3 +17,7 @@ class PointHandler:
     @property
     def z(self):
         return self._vertex.dxf.location.z
+
+    @property
+    def layer_name(self):
+        return f"{self.x} {self.y}"
