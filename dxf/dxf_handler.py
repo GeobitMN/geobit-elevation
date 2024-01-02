@@ -36,7 +36,7 @@ class DXFHandler:
         self._space.add_polyline3d(points=points, dxfattribs=attribs)
         self._save()
 
-    def store_points(self, *, layer_name=None, points=None):
+    def store_points(self, *, layer_name=None, points=None, text_rotation=0):
         if not layer_name:
             raise ValueError("No layer_name specified!")
 
@@ -52,8 +52,9 @@ class DXFHandler:
         }
 
         for point in points:
+            point_text = f"{(point[2] * 1000):.1f}"
             self._space.add_point(location=point, dxfattribs=attribs)
-            self._space.add_text(text=f"{(point[2]*1000):.1f}", height=0.005).set_placement(point)
+            self._space.add_text(text=point_text, height=0.005, rotation=text_rotation).set_placement(point)
 
         self._save()
 

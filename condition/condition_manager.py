@@ -1,3 +1,5 @@
+import math
+
 from calculations import calculate_height, height_difference
 from condition import Condition
 from dxf import DXFHandler, PolylineHandler
@@ -10,6 +12,14 @@ class Manager:
         self.type = condition.type
         self.offset = condition.point_offset
         self.tolerance = condition.tolerance
+
+    def calculate_point_rotation(self, point_a, point_b):
+        # If both Y values are the same, we have a vertical line, hence the 90 deg
+        a = point_a.y
+        b = point_b.y
+
+        # We can compare for exact value as they are on the same line
+        return 90 if a == b else 0
 
     def run_calculations(self):
         for count, line in enumerate(self.lines, 1):
@@ -45,6 +55,7 @@ class Manager:
                 middle_index += 1
 
             print(height_points)
+            text_rotation = self.calculate_point_rotation(point_a=point_a, point_b=point_b)
             self.handler.store_polyline(layer_name=layer, points=height_points)
-            self.handler.store_points(layer_name=layer, points=height_points)
+            self.handler.store_points(layer_name=layer, points=height_points, text_rotation=text_rotation)
 
