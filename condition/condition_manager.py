@@ -19,7 +19,7 @@ class Manager:
         b = point_b.y
 
         # We can compare for exact value as they are on the same line
-        return 90 if a == b else 0
+        return 0 if a == b else 90
 
     def run_calculations(self):
         for count, line in enumerate(self.lines, 1):

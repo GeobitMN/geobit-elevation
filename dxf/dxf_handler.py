@@ -4,7 +4,7 @@ from .polyline_handler import PolylineHandler
 
 
 class DXFHandler:
-    def __init__(self, file_location="./res/SIATKA_5x5cm_POLILINIE_3DPUNKTY_TEST_1.dxf"):
+    def __init__(self, file_location=None):
         try:
             self._doc = ezdxf.readfile(file_location)
         except IOError:
