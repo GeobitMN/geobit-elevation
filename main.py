@@ -1,10 +1,15 @@
-from condition import Manager, FIRST, SECOND, THIRD, FOURTH, FIFTH
-from dxf import DXFHandler
+import argparse
 import shutil
 
+from condition import Manager, FIRST, SECOND, THIRD, FOURTH, FIFTH
+from dxf import DXFHandler
+
+parser = argparse.ArgumentParser()
+parser.add_argument('file', type=argparse.FileType('r'))
 
 if __name__ == "__main__":
-    original_file = "./res/SIATKA_5x5cm_POLILINIE_3D_TEST_2.dxf"
+    args = parser.parse_args()
+    original_file = args.file.name
     file_template = original_file[:-4]
 
     for condition in [FIRST, SECOND, THIRD, FOURTH, FIFTH]:

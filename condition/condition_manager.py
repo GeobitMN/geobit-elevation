@@ -60,6 +60,6 @@ class Manager:
                 text_rotation = self.calculate_point_rotation(point_a=point_a, point_b=point_b)
                 self.handler.store_polyline(layer_name=layer, points=height_points)
                 self.handler.store_points(layer_name=layer, points=height_points, text_rotation=text_rotation)
-                # print(height_points)
+                print(height_points)
                 bar()
 
