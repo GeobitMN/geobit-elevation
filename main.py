@@ -1,18 +1,25 @@
 from condition import Manager, FIRST, SECOND, THIRD, FOURTH, FIFTH
 from dxf import DXFHandler
+import shutil
 
 
 if __name__ == "__main__":
-    file_location = "./res/SIATKA_5x5cm_POLILINIE_3DPUNKTY_TEST_1.dxf"
+    original_file = "./res/SIATKA_5x5cm_POLILINIE_3D_TEST_2.dxf"
+    file_template = original_file[:-4]
 
-    handler = DXFHandler(file_location=file_location)
-    lines = handler.lines
+    for condition in [FIRST, SECOND, THIRD, FOURTH, FIFTH]:
+        # Copy file for the condition
+        copied_file = f"{file_template}_warunek_{condition.type}.dxf"
+        shutil.copy2(src=original_file, dst=copied_file)
 
-    manager = Manager(
-        handler=handler,
-        lines=lines,
-        condition=FIRST
-    )
+        handler = DXFHandler(file_location=copied_file)
+        lines = handler.lines
 
-    manager.run_calculations()
+        manager = Manager(
+            handler=handler,
+            lines=lines,
+            condition=condition
+        )
+
+        manager.run_calculations()
 
