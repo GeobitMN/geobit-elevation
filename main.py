@@ -21,7 +21,7 @@ if __name__ == "__main__":
     original_file = args.file.name
     file_template = original_file[:-4]
 
-    for condition in [FIRST, SECOND, THIRD, FOURTH, FIFTH]:
+    for condition in [FIFTH]:
         # Copy file for the condition
         copied_file = f"{file_template}_warunek_{condition.type}.dxf"
         shutil.copy2(src=original_file, dst=copied_file)

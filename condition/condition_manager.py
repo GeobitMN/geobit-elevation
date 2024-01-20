@@ -4,6 +4,7 @@ from calculations import calculate_height, height_difference
 from condition import Condition, CalculationsError
 from dxf import DXFHandler, PolylineHandler
 
+
 class Manager:
     def __init__(self, *, handler: DXFHandler, lines: [PolylineHandler], condition: Condition):
         self.handler = handler
@@ -60,8 +61,10 @@ class Manager:
                     middle_index += 1
 
                 if point_a is None or point_b is None:
-                    print(f"Nie można było skończyć przeliczeń dla warunku: {self.type}")
-                    raise CalculationsError(f"Could not perform calculations for condition: {self.type}")
+                    bar.text = f"Pominięto linie {count}, gdyż jest za krótka dla wyliczenia warunku {self.type}"
+                    bar()
+                    continue
+
                 text_rotation = self.calculate_point_rotation(point_a=point_a, point_b=point_b)
                 self.handler.store_polyline(layer_name=layer, points=height_points)
                 self.handler.store_points(
@@ -70,6 +73,7 @@ class Manager:
                     text_rotation=text_rotation,
                     tolerance=self.tolerance
                 )
-                print(height_points)
+                # print(height_points)
                 bar()
 
+        print(f"Skończono obliczenia dla warunku {self.type}")
