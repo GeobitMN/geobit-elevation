@@ -1,9 +1,8 @@
 from alive_progress import alive_bar
 
 from calculations import calculate_height, height_difference
-from condition import Condition
+from condition import Condition, CalculationsError
 from dxf import DXFHandler, PolylineHandler
-
 
 class Manager:
     def __init__(self, *, handler: DXFHandler, lines: [PolylineHandler], condition: Condition):
@@ -35,6 +34,11 @@ class Manager:
                 second_index = first_index + self.offset  # Gives 2nd point with distance for the given condition
                 middle_index = int(self.offset/2)
 
+                # Initialize vars
+                point_a = None
+                point_b = None
+                point_mid = None
+
                 while second_index < length:
                     point_a = line[first_index]
                     point_b = line[second_index]
@@ -55,11 +59,17 @@ class Manager:
                     second_index += 1
                     middle_index += 1
 
-                if point_a == None or point_b == None:
-                    break
+                if point_a is None or point_b is None:
+                    print(f"Nie można było skończyć przeliczeń dla warunku: {self.type}")
+                    raise CalculationsError(f"Could not perform calculations for condition: {self.type}")
                 text_rotation = self.calculate_point_rotation(point_a=point_a, point_b=point_b)
                 self.handler.store_polyline(layer_name=layer, points=height_points)
-                self.handler.store_points(layer_name=layer, points=height_points, text_rotation=text_rotation)
+                self.handler.store_points(
+                    layer_name=layer,
+                    points=height_points,
+                    text_rotation=text_rotation,
+                    tolerance=self.tolerance
+                )
                 print(height_points)
                 bar()
 

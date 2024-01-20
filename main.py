@@ -1,7 +1,16 @@
 import argparse
+import os
 import shutil
 
-from condition import Manager, FIRST, SECOND, THIRD, FOURTH, FIFTH
+from condition import (
+    CalculationsError,
+    Manager,
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH
+)
 from dxf import DXFHandler
 
 parser = argparse.ArgumentParser()
@@ -17,6 +26,7 @@ if __name__ == "__main__":
         copied_file = f"{file_template}_warunek_{condition.type}.dxf"
         shutil.copy2(src=original_file, dst=copied_file)
 
+        # Initialize for current condition
         handler = DXFHandler(file_location=copied_file)
         lines = handler.lines
 
@@ -26,5 +36,10 @@ if __name__ == "__main__":
             condition=condition
         )
 
-        manager.run_calculations()
+        # Perform calculations
+        try:
+            manager.run_calculations()
+        except CalculationsError:
+            # Calculations for the given file are incomplete - remove the file
+            os.remove(copied_file)
 

@@ -36,14 +36,14 @@ class DXFHandler:
         self._space.add_polyline3d(points=points, dxfattribs=attribs)
         self._save()
 
-    def store_points(self, *, layer_name=None, points=None, text_rotation=0):
+    def store_points(self, *, layer_name=None, points=None, text_rotation=0, tolerance=None):
         if not layer_name:
             raise ValueError("No layer_name specified!")
 
         if not points:
             raise ValueError("No points provided!")
 
-        attribs = {
+        attribs_normal = {
             "layer": layer_name,
             "color": 62,
             "angle": 50,
@@ -51,7 +51,31 @@ class DXFHandler:
             "plotstyle_handle": 390,
         }
 
+        attribs_below = {
+            "layer": layer_name,
+            "color": 5,
+            "angle": 50,
+            "plotstyle_enum": 380,
+            "plotstyle_handle": 390,
+        }
+
+        attribs_above = {
+            "layer": layer_name,
+            "color": 1,
+            "angle": 50,
+            "plotstyle_enum": 380,
+            "plotstyle_handle": 390,
+        }
+
         for point in points:
+            # Decide which color to paint the point in
+            if point[2] * 1000 > tolerance:
+                attribs = attribs_above
+            elif point[2] * 1000 < -tolerance:
+                attribs = attribs_below
+            else:
+                attribs = attribs_normal
+
             point_text = f"{(point[2] * 1000):.1f}"
             self._space.add_point(location=point, dxfattribs=attribs)
             self._space.add_text(text=point_text, height=0.005, rotation=text_rotation).set_placement(point)
